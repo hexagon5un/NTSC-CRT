@@ -12,6 +12,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /*
  *                      FULL HORIZONTAL LINE SIGNAL (~63500 ns)
@@ -527,9 +528,14 @@ crt_draw(struct CRT *v, int noise)
    
     memset(ccref, 0, sizeof(ccref));
     
+	unsigned int seed;
+	FILE* urandom = fopen("/dev/urandom", "r");
+	fread(&seed, sizeof(int), 1, urandom);
+	fclose(urandom);
+	srand(seed);
+	static int rn;
+	rn = rand(); /* 'random' noise */
     for (i = 0; i < CRT_INPUT_SIZE; i++) {
-        static int rn = 194; /* 'random' noise */
-
         rn = (214019 * rn + 140327895);
 
         /* signal + noise */
